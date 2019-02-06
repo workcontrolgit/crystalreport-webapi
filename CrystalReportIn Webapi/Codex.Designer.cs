@@ -1,4 +1,4 @@
-﻿// T4 code generation is enabled for model 'c:\users\debendra\documents\visual studio 2013\Projects\CrystalReportIn Webapi\CrystalReportIn Webapi\Codex.edmx'. 
+﻿// T4 code generation is enabled for model 'C:\apps\crystalreport\CrystalReport-in-WebApi\CrystalReportIn Webapi\Codex.edmx'. 
 // To enable legacy code generation, change the value of the 'Code Generation Strategy' designer
 // property to 'Legacy ObjectContext'. This property is available in the Properties Window when the model
 // is open in the designer.

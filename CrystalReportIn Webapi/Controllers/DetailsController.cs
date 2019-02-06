@@ -42,12 +42,12 @@ namespace CrystalReportIn_Webapi.Controllers
             rd.Load(Path.Combine(System.Web.Hosting.HostingEnvironment.MapPath("~/Reports"), "UserRegistration.rpt"));
             ConnectionInfo connectInfo = new ConnectionInfo()
             {
-                ServerName = "Debendra",
+                ServerName = ".",
                 DatabaseName = "CodeX",
                 UserID = "sa",
-                Password = "123"
+                Password = "fr2ece2!"
             };
-            rd.SetDatabaseLogon("sa", "123");
+            rd.SetDatabaseLogon("sa", "fr2ece2!");
             foreach (Table tbl in rd.Database.Tables)
             {
                 tbl.LogOnInfo.ConnectionInfo = connectInfo;
@@ -61,12 +61,13 @@ namespace CrystalReportIn_Webapi.Controllers
                     Port = 587,
                     UseDefaultCredentials = true,
                     Host = "smtp.gmail.com",
+                    DeliveryMethod = SmtpDeliveryMethod.Network,
                     EnableSsl = true
                 };
 
                 smtp.UseDefaultCredentials = false;
-                smtp.Credentials = new NetworkCredential("debendra256@gmail.com", "9853183297");
-                var message = new System.Net.Mail.MailMessage("debendra256@gmail.com", EmailTosend, "User Registration Details", "Hi Please check your Mail  and find the attachement.");
+                smtp.Credentials = new NetworkCredential("fujidnguyen@gmail.com", "gasoline87");
+                var message = new System.Net.Mail.MailMessage("fujidnguyen@gmail.com", EmailTosend, "User Registration Details", "Hi Please check your Mail  and find the attachement.");
                 message.Attachments.Add(new Attachment(stream, "UsersRegistration.pdf"));
 
                 smtp.Send(message);
