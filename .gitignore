@@ -154,3 +154,4 @@ $RECYCLE.BIN/
 
 # Mac desktop service store files
 .DS_Store
+/.vs/CrystalReportIn Webapi/v15/Server/sqlite3

@@ -11,6 +11,7 @@ using CrystalDecisions.Shared;
 using System.Net.Mail;
 using System.Threading.Tasks;
 using System.Web;
+using System.Configuration;
 
 namespace CrystalReportIn_Webapi.Controllers
 {
@@ -38,21 +39,9 @@ namespace CrystalReportIn_Webapi.Controllers
                 model.Add(obj);
 
             }
-
+            
             rd.Load(Path.Combine(System.Web.Hosting.HostingEnvironment.MapPath("~/Reports"), "UserRegistration.rpt"));
-            ConnectionInfo connectInfo = new ConnectionInfo()
-            {
-                ServerName = ".",
-                DatabaseName = "CodeX",
-                UserID = "sa",
-                Password = "fr2ece2!"
-            };
-            rd.SetDatabaseLogon("sa", "fr2ece2!");
-            foreach (Table tbl in rd.Database.Tables)
-            {
-                tbl.LogOnInfo.ConnectionInfo = connectInfo;
-                tbl.ApplyLogOnInfo(tbl.LogOnInfo);
-            }
+
             rd.SetDataSource(model);
             using (var stream = rd.ExportToStream(ExportFormatType.PortableDocFormat))
             {
