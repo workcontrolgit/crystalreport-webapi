@@ -43,6 +43,7 @@ namespace CrystalReportIn_Webapi.Controllers
             rd.Load(Path.Combine(System.Web.Hosting.HostingEnvironment.MapPath("~/Reports"), "UserRegistration.rpt"));
 
             rd.SetDataSource(model);
+
             using (var stream = rd.ExportToStream(ExportFormatType.PortableDocFormat))
             {
                 SmtpClient smtp = new SmtpClient
@@ -67,6 +68,46 @@ namespace CrystalReportIn_Webapi.Controllers
             return response1;
         }
 
+        [AllowAnonymous]
+        [Route("Report/DownloadReport")]
+        [HttpPost]
+        public HttpResponseMessage DownloadReport(Users user)
+        {
+            string EmailTosend = WebUtility.UrlDecode(user.Email);
+            List<Users> model = new List<Users>();
+            var data = cX.tbl_Registration;
+            var rd = new ReportDocument();
+
+            foreach (var details in data)
+            {
+                Users obj = new Users();
+                obj.Email = details.Email;
+                obj.FirstName = details.FirstName;
+                obj.LastName = details.LastName;
+                model.Add(obj);
+
+            }
+
+            rd.Load(Path.Combine(System.Web.Hosting.HostingEnvironment.MapPath("~/Reports"), "UserRegistration.rpt"));
+
+            rd.SetDataSource(model);
+            MemoryStream memoryStream = new MemoryStream();
+            // memoryStream = (MemoryStream)rd.ExportToStream(ExportFormatType.PortableDocFormat);
+            Stream stream = rd.ExportToStream(ExportFormatType.PortableDocFormat);
+            stream.CopyTo(memoryStream);
+
+            //HttpResponseMessage response1 = Request.CreateResponse(HttpStatusCode.OK, memoryStream);
+            // HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK, Convert.ToBase64String(memoryStream.ToArray()));
+            HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK, "value");
+            response.Headers.Clear();
+            response.Content = new ByteArrayContent(memoryStream.ToArray());
+            response.Content.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("attachment");
+            response.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/pdf");
+            response.Content.Headers.ContentDisposition.FileName = "Transcript.pdf";
+
+            memoryStream.Close();
+            return response;
+        }
 
 
         [Route("user/PostUserImage")]
