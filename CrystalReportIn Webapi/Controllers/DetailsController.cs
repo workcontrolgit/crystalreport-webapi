@@ -12,6 +12,7 @@ using System.Net.Mail;
 using System.Threading.Tasks;
 using System.Web;
 using System.Configuration;
+using System.Web.Http.Cors;
 
 namespace CrystalReportIn_Webapi.Controllers
 {
@@ -68,12 +69,13 @@ namespace CrystalReportIn_Webapi.Controllers
             return response1;
         }
 
+        [EnableCors(origins: "http://localhost:4200", headers: "*", methods: "*")]
         [AllowAnonymous]
         [Route("Report/DownloadReport")]
-        [HttpPost]
+        [HttpGet]
         public HttpResponseMessage DownloadReport(Users user)
         {
-            string EmailTosend = WebUtility.UrlDecode(user.Email);
+            // string EmailTosend = WebUtility.UrlDecode(user.Email);
             List<Users> model = new List<Users>();
             var data = cX.tbl_Registration;
             var rd = new ReportDocument();
@@ -101,6 +103,7 @@ namespace CrystalReportIn_Webapi.Controllers
             HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK, "value");
             response.Headers.Clear();
             response.Content = new ByteArrayContent(memoryStream.ToArray());
+            // response.Content = new StreamContent(stream);
             response.Content.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("attachment");
             response.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/pdf");
             response.Content.Headers.ContentDisposition.FileName = "Transcript.pdf";
