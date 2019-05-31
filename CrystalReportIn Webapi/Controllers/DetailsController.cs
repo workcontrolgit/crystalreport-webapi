@@ -55,10 +55,10 @@ namespace CrystalReportIn_Webapi.Controllers
                     DeliveryMethod = SmtpDeliveryMethod.Network,
                     EnableSsl = true
                 };
-
                 smtp.UseDefaultCredentials = false;
-                smtp.Credentials = new NetworkCredential("fujidnguyen@gmail.com", "gasoline87");
-                var message = new System.Net.Mail.MailMessage("fujidnguyen@gmail.com", EmailTosend, "User Registration Details", "Hi Please check your Mail  and find the attachement.");
+                // to use google smtp to send out the report, update the credential below
+                smtp.Credentials = new NetworkCredential("accountname@gmail.com", "password");
+                var message = new System.Net.Mail.MailMessage("accountname@gmail.com", EmailTosend, "User Registration Details", "Hi Please check your Mail  and find the attachement.");
                 message.Attachments.Add(new Attachment(stream, "UsersRegistration.pdf"));
 
                 smtp.Send(message);
@@ -112,74 +112,5 @@ namespace CrystalReportIn_Webapi.Controllers
             return response;
         }
 
-
-        [Route("user/PostUserImage")]
-
-        public async Task<HttpResponseMessage> PostUserImage()
-        {
-            Dictionary<string, object> dict = new Dictionary<string, object>();
-            try
-            {
-
-                var httpRequest = HttpContext.Current.Request;
-
-                foreach (string file in httpRequest.Files)
-                {
-                    HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.Created);
-
-                    var postedFile = httpRequest.Files[file];
-                    if (postedFile != null && postedFile.ContentLength > 0)
-                    {
-
-                        int MaxContentLength = 1024 * 1024 * 1; //Size = 1 MB
-
-                        IList<string> AllowedFileExtensions = new List<string> { ".jpg", ".gif", ".png" };
-                        var ext = postedFile.FileName.Substring(postedFile.FileName.LastIndexOf('.'));
-                        var extension = ext.ToLower();
-                        if (!AllowedFileExtensions.Contains(extension))
-                        {
-
-                            var message = string.Format("Please Upload image of type .jpg,.gif,.png.");
-
-                            dict.Add("error", message);
-                            return Request.CreateResponse(HttpStatusCode.BadRequest, dict);
-                        }
-                        else if (postedFile.ContentLength > MaxContentLength)
-                        {
-
-                            var message = string.Format("Please Upload a file upto 1 mb.");
-
-                            dict.Add("error", message);
-                            return Request.CreateResponse(HttpStatusCode.BadRequest, dict);
-                        }
-                        else
-                        {
-
-                           // YourModelProperty.imageurl = userInfo.email_id + extension;
-                            //  where you want to attach your imageurl
-
-                            //if needed write the code to update the table
-
-                            var filePath = HttpContext.Current.Server.MapPath("~/Userimage/" +postedFile.FileName + extension);
-                            //Userimage myfolder name where i want to save my image
-                            postedFile.SaveAs(filePath);
-
-                        }
-                    }
-
-                    var message1 = string.Format("Image Updated Successfully.");
-                    return Request.CreateErrorResponse(HttpStatusCode.Created, message1); ;
-                }
-                var res = string.Format("Please Upload a image.");
-                dict.Add("error", res);
-                return Request.CreateResponse(HttpStatusCode.NotFound, dict);
-            }
-            catch (Exception ex)
-            {
-                var res = string.Format("some Message");
-                dict.Add("error", res);
-                return Request.CreateResponse(HttpStatusCode.NotFound, dict);
-            }
-        }
     }
 }
